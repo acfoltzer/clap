@@ -855,7 +855,6 @@ impl<'help> Arg<'help> {
     ///
     /// [`Arg::conflicts_with_all(names)`]: ./struct.Arg.html#method.conflicts_with_all
     /// [`Arg::exclusive(true)`]: ./struct.Arg.html#method.exclusive
-
     pub fn conflicts_with<T: Key>(mut self, arg_id: T) -> Self {
         self.blacklist.push(arg_id.into());
         self
@@ -1160,7 +1159,7 @@ impl<'help> Arg<'help> {
     /// **NOTE:** If using YAML the values should be laid out as follows
     ///
     /// ```yaml
-    /// requires_if:
+    /// requires_if_eq:
     ///     - [val, arg]
     /// ```
     ///
@@ -1169,11 +1168,11 @@ impl<'help> Arg<'help> {
     /// ```rust
     /// # use clap::Arg;
     /// Arg::new("config")
-    ///     .requires_if("val", "arg")
+    ///     .requires_if_eq("val", "arg")
     /// # ;
     /// ```
     ///
-    /// Setting [`Arg::requires_if(val, arg)`] requires that the `arg` be used at runtime if the
+    /// Setting [`Arg::requires_if_eq(val, arg)`] requires that the `arg` be used at runtime if the
     /// defining argument's value is equal to `val`. If the defining argument is anything other than
     /// `val`, the other argument isn't required.
     ///
@@ -1182,7 +1181,7 @@ impl<'help> Arg<'help> {
     /// let res = App::new("prog")
     ///     .arg(Arg::new("cfg")
     ///         .takes_value(true)
-    ///         .requires_if("my.cfg", "other")
+    ///         .requires_if_eq("my.cfg", "other")
     ///         .long("config"))
     ///     .arg(Arg::new("other"))
     ///     .try_get_matches_from(vec![
@@ -1192,7 +1191,7 @@ impl<'help> Arg<'help> {
     /// assert!(res.is_ok()); // We didn't use --config=my.cfg, so other wasn't required
     /// ```
     ///
-    /// Setting [`Arg::requires_if(val, arg)`] and setting the value to `val` but *not* supplying
+    /// Setting [`Arg::requires_if_eq(val, arg)`] and setting the value to `val` but *not* supplying
     /// `arg` is an error.
     ///
     /// ```rust
@@ -1200,7 +1199,7 @@ impl<'help> Arg<'help> {
     /// let res = App::new("prog")
     ///     .arg(Arg::new("cfg")
     ///         .takes_value(true)
-    ///         .requires_if("my.cfg", "input")
+    ///         .requires_if_eq("my.cfg", "input")
     ///         .long("config"))
     ///     .arg(Arg::new("input"))
     ///     .try_get_matches_from(vec![
@@ -1213,7 +1212,7 @@ impl<'help> Arg<'help> {
     /// [`Arg::requires(name)`]: ./struct.Arg.html#method.requires
     /// [Conflicting]: ./struct.Arg.html#method.conflicts_with
     /// [override]: ./struct.Arg.html#method.overrides_with
-    pub fn requires_if<T: Key>(mut self, val: &'help str, arg_id: T) -> Self {
+    pub fn requires_if_eq<T: Key>(mut self, val: &'help str, arg_id: T) -> Self {
         self.requires.push((Some(val), arg_id.into()));
         self
     }
@@ -1224,7 +1223,7 @@ impl<'help> Arg<'help> {
     /// **NOTE:** If using YAML the values should be laid out as follows
     ///
     /// ```yaml
-    /// requires_if:
+    /// requires_if_eq:
     ///     - [val, arg]
     ///     - [val2, arg2]
     /// ```
@@ -4178,8 +4177,8 @@ impl<'a> From<&'a Yaml> for Arg<'a> {
                 "value_names" => yaml_vec_or_str!(v, a, value_name),
                 "groups" => yaml_vec_or_str!(v, a, group),
                 "requires" => yaml_vec_or_str!(v, a, requires),
-                "requires_if" => yaml_tuple2!(a, v, requires_if),
-                "requires_ifs" => yaml_tuple2!(a, v, requires_if),
+                "requires_if_eq" => yaml_tuple2!(a, v, requires_if_eq),
+                "requires_ifs" => yaml_tuple2!(a, v, requires_if_eq),
                 "conflicts_with" => yaml_vec_or_str!(v, a, conflicts_with),
                 "exclusive" => yaml_to_bool!(a, v, exclusive),
                 "hide_default_value" => yaml_to_bool!(a, v, hide_default_value),

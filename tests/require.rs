@@ -430,7 +430,7 @@ fn requires_if_present_val() {
     let res = App::new("unlessone")
         .arg(
             Arg::new("cfg")
-                .requires_if("my.cfg", "extra")
+                .requires_if_eq("my.cfg", "extra")
                 .takes_value(true)
                 .long("config"),
         )
@@ -479,7 +479,7 @@ fn requires_if_present_val_no_present_pass() {
     let res = App::new("unlessone")
         .arg(
             Arg::new("cfg")
-                .requires_if("my.cfg", "extra")
+                .requires_if_eq("my.cfg", "extra")
                 .takes_value(true)
                 .long("config"),
         )
@@ -850,7 +850,7 @@ fn requires_if_invalid_arg() {
     let _ = App::new("prog")
         .arg(
             Arg::new("config")
-                .requires_if("val", "extra")
+                .requires_if_eq("val", "extra")
                 .long("config"),
         )
         .try_get_matches_from(vec!["", "--config"]);

@@ -16,7 +16,7 @@ struct Opt {
 
 #[derive(Clap, Debug)]
 struct Opt2 {
-    #[clap(raw(requires_if = r#""one", "two""#))]
+    #[clap(raw(requires_if_eq = r#""one", "two""#))]
     s: String,
 }
 fn main() {
