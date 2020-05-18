@@ -1233,14 +1233,14 @@ impl<'help> Arg<'help> {
     /// ```rust
     /// # use clap::Arg;
     /// Arg::new("config")
-    ///     .requires_ifs(&[
+    ///     .requires_if_eq_any(&[
     ///         ("val", "arg"),
     ///         ("other_val", "arg2"),
     ///     ])
     /// # ;
     /// ```
     ///
-    /// Setting [`Arg::requires_ifs(&["val", "arg"])`] requires that the `arg` be used at runtime if the
+    /// Setting [`Arg::requires_if_eq_any(&["val", "arg"])`] requires that the `arg` be used at runtime if the
     /// defining argument's value is equal to `val`. If the defining argument's value is anything other
     /// than `val`, `arg` isn't required.
     ///
@@ -1249,7 +1249,7 @@ impl<'help> Arg<'help> {
     /// let res = App::new("prog")
     ///     .arg(Arg::new("cfg")
     ///         .takes_value(true)
-    ///         .requires_ifs(&[
+    ///         .requires_if_eq_any(&[
     ///             ("special.conf", "opt"),
     ///             ("other.conf", "other"),
     ///         ])
@@ -1268,7 +1268,7 @@ impl<'help> Arg<'help> {
     /// [`Arg::requires(name)`]: ./struct.Arg.html#method.requires
     /// [Conflicting]: ./struct.Arg.html#method.conflicts_with
     /// [override]: ./struct.Arg.html#method.overrides_with
-    pub fn requires_ifs<T: Key>(mut self, ifs: &[(&'help str, T)]) -> Self {
+    pub fn requires_if_eq_any<T: Key>(mut self, ifs: &[(&'help str, T)]) -> Self {
         self.requires
             .extend(ifs.iter().map(|(val, arg)| (Some(*val), Id::from(arg))));
         self
@@ -4178,7 +4178,7 @@ impl<'a> From<&'a Yaml> for Arg<'a> {
                 "groups" => yaml_vec_or_str!(v, a, group),
                 "requires" => yaml_vec_or_str!(v, a, requires),
                 "requires_if_eq" => yaml_tuple2!(a, v, requires_if_eq),
-                "requires_ifs" => yaml_tuple2!(a, v, requires_if_eq),
+                "requires_if_eq_any" => yaml_tuple2!(a, v, requires_if_eq),
                 "conflicts_with" => yaml_vec_or_str!(v, a, conflicts_with),
                 "exclusive" => yaml_to_bool!(a, v, exclusive),
                 "hide_default_value" => yaml_to_bool!(a, v, hide_default_value),
@@ -4335,7 +4335,7 @@ impl<'help> fmt::Debug for Arg<'help> {
             f,
             "Arg {{ id: {:X?}, name: {:?}, help: {:?}, long_help: {:?}, conflicts_with: {:?}, \
              settings: {:?}, required_unless: {:?}, overrides_with: {:?}, groups: {:?}, \
-             requires: {:?}, requires_ifs: {:?}, short: {:?}, index: {:?}, long: {:?}, \
+             requires: {:?}, requires_if_eq_any: {:?}, short: {:?}, index: {:?}, long: {:?}, \
              aliases: {:?}, short_aliases: {:?}, possible_values: {:?}, value_names: {:?}, \
              number_of_values: {:?}, max_values: {:?}, min_values: {:?}, value_delimiter: {:?}, \
              default_value_ifs: {:?}, value_terminator: {:?}, display_order: {:?}, env: {:?}, \
