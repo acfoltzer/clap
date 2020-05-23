@@ -52,7 +52,7 @@ args:
             - fast
             - slow
         requires_if_eq:
-            - [fast, flag]
+            - [flag, fast]
     - positional3:
         index: 3
         about: tests positionals with specific values

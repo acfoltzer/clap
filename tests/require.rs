@@ -446,7 +446,7 @@ fn requires_if_present_mult() {
     let res = App::new("unlessone")
         .arg(
             Arg::new("cfg")
-                .requires_if_eq_any(&[("my.cfg", "extra"), ("other.cfg", "other")])
+                .requires_if_eq_any(&[("extra", "my.cfg"), ("other", "other.cfg")])
                 .takes_value(true)
                 .long("config"),
         )
@@ -463,7 +463,7 @@ fn requires_if_present_mult_pass() {
     let res = App::new("unlessone")
         .arg(
             Arg::new("cfg")
-                .requires_if_eq_any(&[("my.cfg", "extra"), ("other.cfg", "other")])
+                .requires_if_eq_any(&[("extra", "my.cfg"), ("other", "other.cfg")])
                 .takes_value(true)
                 .long("config"),
         )

@@ -1217,15 +1217,17 @@ impl<'help> Arg<'help> {
         self
     }
 
+    /// TODO: The wording here sucks. It's imprecise and ambiguous. Change it, Creepy. Chop chop.
+    ///
     /// Allows multiple conditional requirements. The requirement will only become valid if this arg's value
     /// equals `val`.
     ///
     /// **NOTE:** If using YAML the values should be laid out as follows
     ///
     /// ```yaml
-    /// requires_if_eq:
-    ///     - [val, arg]
-    ///     - [val2, arg2]
+    /// requires_if_eq_any:
+    ///     - [arg1, val1]
+    ///     - [arg2, val2]
     /// ```
     ///
     /// # Examples
@@ -1240,7 +1242,7 @@ impl<'help> Arg<'help> {
     /// # ;
     /// ```
     ///
-    /// Setting [`Arg::requires_if_eq_any(&["val", "arg"])`] requires that the `arg` be used at runtime if the
+    /// Setting [`Arg::requires_if_eq_any(&[("arg", "val")])`] requires that the `arg` be used at runtime if the
     /// defining argument's value is equal to `val`. If the defining argument's value is anything other
     /// than `val`, `arg` isn't required.
     ///
@@ -1250,8 +1252,8 @@ impl<'help> Arg<'help> {
     ///     .arg(Arg::new("cfg")
     ///         .takes_value(true)
     ///         .requires_if_eq_any(&[
-    ///             ("special.conf", "opt"),
-    ///             ("other.conf", "other"),
+    ///             ("opt", "special.conf"),
+    ///             ("other", "other.conf"),
     ///         ])
     ///         .long("config"))
     ///     .arg(Arg::new("opt")
@@ -1268,9 +1270,9 @@ impl<'help> Arg<'help> {
     /// [`Arg::requires(name)`]: ./struct.Arg.html#method.requires
     /// [Conflicting]: ./struct.Arg.html#method.conflicts_with
     /// [override]: ./struct.Arg.html#method.overrides_with
-    pub fn requires_if_eq_any<T: Key>(mut self, ifs: &[(&'help str, T)]) -> Self {
+    pub fn requires_if_eq_any<T: Key>(mut self, ifs: &[(T, &'help str)]) -> Self {
         self.requires
-            .extend(ifs.iter().map(|(val, arg)| (Some(*val), Id::from(arg))));
+            .extend(ifs.iter().map(|(arg, val)| (Some(*val), Id::from(arg))));
         self
     }
 

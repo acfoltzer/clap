@@ -36,7 +36,7 @@ struct Opt {
     #[clap(long("values"))]
     values: Vec<i32>,
 
-    #[clap(name = "FILE", requires_if_eq("FILE", "values"))]
+    #[clap(name = "FILE", requires_if_eq("values", "FILE"))]
     files: Vec<String>,
 }
 
